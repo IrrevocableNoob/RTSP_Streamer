@@ -1,10 +1,24 @@
+import sys
+
 from rtsp_streamer.config import (
     AppConfig,
     Stream,
+    config_path,
     default_output_dir,
     load_config,
     save_config,
 )
+
+
+def test_config_path_uses_appdata_when_frozen(monkeypatch, tmp_path):
+    monkeypatch.setattr(sys, "frozen", True, raising=False)
+    monkeypatch.setenv("APPDATA", str(tmp_path))
+    assert config_path() == str(tmp_path / "RTSP_Streamer" / "config.json")
+
+
+def test_config_path_beside_script_when_not_frozen(monkeypatch):
+    monkeypatch.setattr(sys, "frozen", False, raising=False)
+    assert config_path().endswith("config.json")
 
 
 def test_load_missing_returns_defaults(tmp_path):

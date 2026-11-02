@@ -36,10 +36,26 @@ def default_output_dir() -> str:
     return str(Path.home() / "Videos" / "RTSP_Streamer")
 
 
+def data_dir() -> str:
+    """Where user data (config, logs) lives.
+
+    A packaged (PyInstaller-frozen) build keeps it in %APPDATA%\\RTSP_Streamer
+    so it is always writable and independent of where the exe is installed.
+    A dev checkout keeps it beside the launched script.
+    """
+    if getattr(sys, "frozen", False):
+        base = os.path.join(
+            os.environ.get("APPDATA") or os.path.expanduser("~"), "RTSP_Streamer"
+        )
+        os.makedirs(base, exist_ok=True)
+        return base
+    if sys.argv and sys.argv[0]:
+        return os.path.dirname(os.path.abspath(sys.argv[0]))
+    return os.getcwd()
+
+
 def config_path() -> str:
-    """Path to config.json beside the executable (cwd in a dev checkout)."""
-    base = os.path.dirname(os.path.abspath(sys.argv[0])) if sys.argv and sys.argv[0] else os.getcwd()
-    return os.path.join(base, "config.json")
+    return os.path.join(data_dir(), "config.json")
 
 
 def load_config(path: str) -> AppConfig:

@@ -29,7 +29,13 @@ A lightweight, standalone **Windows desktop viewer for RTSP/IP camera streams**.
 
 - **Windows 10/11** (developed and tested on Windows 11).
 - **64-bit [VLC](https://www.videolan.org/) 3.0 or newer**, installed. The app uses VLC's `libvlc` for decoding and **does not bundle it**. If VLC isn't found, the app shows a message and exits.
-- **Python 3.11+** (works on 3.14).
+- **Python 3.11+** (works on 3.14) — only needed to run from source; the prebuilt `.exe` does not require Python.
+
+## Download (prebuilt exe)
+
+Grab `RTSP_Streamer.exe` from the [**Releases**](../../releases/latest) page and double-click it — no install, no Python needed (VLC must still be installed). Settings and logs are stored in `%APPDATA%\RTSP_Streamer`.
+
+To keep it at a fixed location with a desktop shortcut, download `install.ps1` next to the exe and run `powershell -ExecutionPolicy Bypass -File .\install.ps1` (installs to `C:\rtsp_streamer`).
 
 ## Install
 
