@@ -11,10 +11,7 @@ A lightweight, standalone **Windows desktop viewer for RTSP/IP camera streams**.
 
 ## Screenshot
 
-<!-- Add a capture of the running app as assets/screenshot.png and uncomment: -->
-<!-- ![RTSP_Streamer in action](assets/screenshot.png) -->
-
-_Screenshot coming soon. See [`assets/`](assets/) to add one._
+![RTSP_Streamer in action](assets/screenshot.png)
 
 ## Features
 
