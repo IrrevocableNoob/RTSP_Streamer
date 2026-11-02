@@ -1,10 +1,20 @@
 # RTSP_Streamer
 
+[![tests](https://github.com/IrrevocableNoob/RTSP_Streamer/actions/workflows/tests.yml/badge.svg)](https://github.com/IrrevocableNoob/RTSP_Streamer/actions/workflows/tests.yml)
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 A lightweight, standalone **Windows desktop viewer for RTSP/IP camera streams**. Watch up to 16 live feeds in an auto-fitting grid, snapshot or record any tile, and keep it floating quietly in the background while you work. No web server, no cloud, no browser — just a native window backed by [VLC](https://www.videolan.org/).
 
 > Built with Python + PyQt6 + [python-vlc](https://pypi.org/project/python-vlc/), leaning on your installed VLC for decoding.
 
 ---
+
+## Screenshot
+
+<!-- Add a capture of the running app as assets/screenshot.png and uncomment: -->
+<!-- ![RTSP_Streamer in action](assets/screenshot.png) -->
+
+_Screenshot coming soon. See [`assets/`](assets/) to add one._
 
 ## Features
 
