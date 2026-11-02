@@ -1,0 +1,7 @@
+# Runtime
+PyQt6
+python-vlc
+
+# Development / tests
+pytest
+pytest-qt
