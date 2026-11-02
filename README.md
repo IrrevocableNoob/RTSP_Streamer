@@ -1,7 +1,7 @@
 # RTSP_Streamer
 
 [![tests](https://github.com/IrrevocableNoob/RTSP_Streamer/actions/workflows/tests.yml/badge.svg)](https://github.com/IrrevocableNoob/RTSP_Streamer/actions/workflows/tests.yml)
-[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](LICENSE)
 
 A lightweight, standalone **Windows desktop viewer for RTSP/IP camera streams**. Watch up to 16 live feeds in an auto-fitting grid, snapshot or record any tile, and keep it floating quietly in the background while you work. No web server, no cloud, no browser — just a native window backed by [VLC](https://www.videolan.org/).
 
@@ -105,4 +105,12 @@ tests/                 headless unit tests (VLC layer faked)
 
 ## License
 
-[MIT](LICENSE)
+Licensed under [**Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International** (CC BY-NC-SA 4.0)](LICENSE).
+
+You may **use, share, and modify** this project for **non-commercial** purposes, as long as you:
+
+- **give credit** to *IrrevocableNoob* and link back to this project,
+- **indicate** any changes you made, and
+- **license your derivatives** under these same terms (ShareAlike).
+
+**Commercial use is not permitted.** This is a source-available, non-commercial license — not an OSI "open source" license. Full terms in [LICENSE](LICENSE).
