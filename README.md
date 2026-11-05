@@ -68,7 +68,7 @@ Recording captures **video only** (H.264, copied without re-encoding) straight t
 
 ## Limitations
 
-- **Windows only.** The video embedding relies on Win32 window handles; macOS/Linux are not supported.
+- **Windows is the supported platform.** Experimental Linux support (X11/XWayland) lives on the `linux` branch — see [LINUX.md](LINUX.md); it is best-effort and not yet verified on real hardware. macOS is untested.
 - **Video only** — no audio playback, no audio in recordings.
 - **LAN-oriented.** Designed for cameras on your local network; there is no cloud relay, remote access, or NAT traversal.
 - **No camera discovery / ONVIF** — you enter stream URLs manually.

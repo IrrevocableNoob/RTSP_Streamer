@@ -39,14 +39,22 @@ def default_output_dir() -> str:
 def data_dir() -> str:
     """Where user data (config, logs) lives.
 
-    A packaged (PyInstaller-frozen) build keeps it in %APPDATA%\\RTSP_Streamer
-    so it is always writable and independent of where the exe is installed.
+    A packaged (PyInstaller-frozen) build keeps it in the platform's per-user
+    data location so it is always writable and independent of where the app is
+    installed:
+      - Windows: %APPDATA%\\RTSP_Streamer
+      - macOS:   ~/Library/Application Support/RTSP_Streamer
+      - Linux:   $XDG_CONFIG_HOME/RTSP_Streamer (default ~/.config/RTSP_Streamer)
     A dev checkout keeps it beside the launched script.
     """
     if getattr(sys, "frozen", False):
-        base = os.path.join(
-            os.environ.get("APPDATA") or os.path.expanduser("~"), "RTSP_Streamer"
-        )
+        if sys.platform.startswith("win"):
+            root = os.environ.get("APPDATA") or os.path.expanduser("~")
+        elif sys.platform == "darwin":
+            root = os.path.expanduser("~/Library/Application Support")
+        else:
+            root = os.environ.get("XDG_CONFIG_HOME") or os.path.expanduser("~/.config")
+        base = os.path.join(root, "RTSP_Streamer")
         os.makedirs(base, exist_ok=True)
         return base
     if sys.argv and sys.argv[0]:

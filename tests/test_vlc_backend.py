@@ -95,10 +95,35 @@ def test_is_alive_false_without_player(fake_vlc):
     assert b.is_alive() is False
 
 
-def test_attach_releases_mouse_and_key_input(fake_vlc):
+def test_attach_releases_mouse_and_key_input(fake_vlc, monkeypatch):
     # libvlc must not grab mouse/keyboard, or clicks never reach the Qt tile.
+    monkeypatch.setattr("rtsp_streamer.vlc_backend.sys.platform", "win32")
     b = VlcPlayerBackend(fake_vlc.instance)
     b.attach(12345)
     assert b._player.hwnd == 12345
     assert b._player.mouse_input is False
     assert b._player.key_input is False
+
+
+def test_embed_uses_hwnd_on_windows(fake_vlc, monkeypatch):
+    from rtsp_streamer.vlc_backend import _embed_video
+    monkeypatch.setattr("rtsp_streamer.vlc_backend.sys.platform", "win32")
+    p = fake_vlc.instance.media_player_new()
+    _embed_video(p, 42)
+    assert p.hwnd == 42 and p.xwindow is None and p.nsobject is None
+
+
+def test_embed_uses_xwindow_on_linux(fake_vlc, monkeypatch):
+    from rtsp_streamer.vlc_backend import _embed_video
+    monkeypatch.setattr("rtsp_streamer.vlc_backend.sys.platform", "linux")
+    p = fake_vlc.instance.media_player_new()
+    _embed_video(p, 42)
+    assert p.xwindow == 42 and p.hwnd is None and p.nsobject is None
+
+
+def test_embed_uses_nsobject_on_macos(fake_vlc, monkeypatch):
+    from rtsp_streamer.vlc_backend import _embed_video
+    monkeypatch.setattr("rtsp_streamer.vlc_backend.sys.platform", "darwin")
+    p = fake_vlc.instance.media_player_new()
+    _embed_video(p, 42)
+    assert p.nsobject == 42 and p.hwnd is None and p.xwindow is None

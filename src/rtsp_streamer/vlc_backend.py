@@ -14,6 +14,7 @@ libvlc finalizes the container on a clean stop.
 from __future__ import annotations
 
 import os
+import sys
 from datetime import datetime
 from typing import Protocol, runtime_checkable
 
@@ -25,6 +26,19 @@ _INSTANCE_ARGS = ["--avcodec-hw=any", "--no-audio"]
 
 class VlcUnavailable(RuntimeError):
     """Raised when libvlc cannot be imported or an instance cannot be built."""
+
+
+def _embed_video(player, handle: int) -> None:
+    """Embed libvlc's video output into a native window handle. The call is
+    platform-specific: HWND on Windows, X11 window id on Linux/BSD, NSObject
+    on macOS. (On Wayland the app runs under XWayland so the handle is an
+    X11 id — see app._ensure_qt_platform.)"""
+    if sys.platform.startswith("win"):
+        player.set_hwnd(handle)
+    elif sys.platform == "darwin":
+        player.set_nsobject(handle)
+    else:
+        player.set_xwindow(handle)
 
 
 def _sanitize(name: str) -> str:
@@ -48,7 +62,7 @@ def ensure_output_dir(root: str, kind: str) -> str:
 
 @runtime_checkable
 class PlayerBackend(Protocol):
-    def attach(self, hwnd: int) -> None: ...
+    def attach(self, handle: int) -> None: ...
     def play(self, url: str) -> None: ...
     def stop(self) -> None: ...
     def take_snapshot(self, path: str) -> bool: ...
@@ -105,9 +119,9 @@ class VlcPlayerBackend:
             self._player = self._instance.media_player_new()
         return self._player
 
-    def attach(self, hwnd: int) -> None:
+    def attach(self, handle: int) -> None:
         player = self._ensure_player()
-        player.set_hwnd(hwnd)
+        _embed_video(player, handle)
         # Let Qt handle input; otherwise libvlc's vout window swallows the
         # clicks the tile needs for select / zoom / context menu.
         player.video_set_mouse_input(False)

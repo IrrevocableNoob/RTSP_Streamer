@@ -1,0 +1,72 @@
+name: linux
+
+on:
+  push:
+    branches: [linux]
+  pull_request:
+    branches: [linux]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      QT_QPA_PLATFORM: offscreen
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: System libs for headless Qt
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libegl1 libgl1 libxkbcommon0 libglib2.0-0
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Run tests
+        run: python -m pytest -q
+
+  appimage:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: System libs
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y imagemagick libegl1 libgl1 libxkbcommon0 libglib2.0-0
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt pyinstaller
+      - name: Build (PyInstaller, one-folder)
+        run: |
+          pyinstaller --noconfirm --clean --windowed \
+            --name RTSP_Streamer --paths src \
+            --distpath dist --workpath build/pyi --specpath build \
+            packaging/launch.py
+      - name: Assemble AppDir
+        run: |
+          APPDIR=AppDir
+          mkdir -p "$APPDIR/usr/bin"
+          cp -r dist/RTSP_Streamer/* "$APPDIR/usr/bin/"
+          install -m 0755 packaging/linux/AppRun "$APPDIR/AppRun"
+          cp packaging/linux/rtsp_streamer.desktop "$APPDIR/rtsp_streamer.desktop"
+          convert -size 256x256 xc:'#1b2a4a' -fill white -gravity center \
+            -pointsize 40 -annotate 0 'RTSP' "$APPDIR/rtsp_streamer.png"
+      - name: Package AppImage
+        run: |
+          wget -q https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage -O appimagetool
+          chmod +x appimagetool
+          ARCH=x86_64 ./appimagetool --appimage-extract-and-run AppDir RTSP_Streamer-x86_64.AppImage
+      - name: Upload AppImage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: RTSP_Streamer-AppImage
+          path: RTSP_Streamer-x86_64.AppImage
+          if-no-files-found: error

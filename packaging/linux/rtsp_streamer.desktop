@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=RTSP_Streamer
+Comment=Viewer for RTSP/IP camera streams
+Exec=RTSP_Streamer
+Icon=rtsp_streamer
+Categories=AudioVideo;Video;Player;
+Terminal=false

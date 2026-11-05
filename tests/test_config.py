@@ -10,10 +10,20 @@ from rtsp_streamer.config import (
 )
 
 
-def test_config_path_uses_appdata_when_frozen(monkeypatch, tmp_path):
+def test_config_path_uses_appdata_when_frozen_windows(monkeypatch, tmp_path):
     monkeypatch.setattr(sys, "frozen", True, raising=False)
+    monkeypatch.setattr("rtsp_streamer.config.sys.platform", "win32")
     monkeypatch.setenv("APPDATA", str(tmp_path))
-    assert config_path() == str(tmp_path / "RTSP_Streamer" / "config.json")
+    import os
+    assert config_path() == os.path.join(str(tmp_path), "RTSP_Streamer", "config.json")
+
+
+def test_config_path_uses_xdg_when_frozen_linux(monkeypatch, tmp_path):
+    import os
+    monkeypatch.setattr(sys, "frozen", True, raising=False)
+    monkeypatch.setattr("rtsp_streamer.config.sys.platform", "linux")
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path))
+    assert config_path() == os.path.join(str(tmp_path), "RTSP_Streamer", "config.json")
 
 
 def test_config_path_beside_script_when_not_frozen(monkeypatch):

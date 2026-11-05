@@ -12,11 +12,19 @@ import pytest
 class _FakePlayer:
     def __init__(self):
         self.hwnd = None
+        self.xwindow = None
+        self.nsobject = None
         self.media = None
         self._played = False
 
     def set_hwnd(self, hwnd):
         self.hwnd = hwnd
+
+    def set_xwindow(self, xid):
+        self.xwindow = xid
+
+    def set_nsobject(self, obj):
+        self.nsobject = obj
 
     def video_set_mouse_input(self, enabled):
         self.mouse_input = enabled
