@@ -1,0 +1,4 @@
+# These run on Linux — must keep LF endings (a CRLF shebang breaks them).
+*.sh            text eol=lf
+packaging/linux/AppRun          text eol=lf
+packaging/linux/*.desktop       text eol=lf
